@@ -67,7 +67,12 @@ class MyHomepageState extends State<MyHomepage> {
       _exploreName = name;
     });
   }
-
+  
+  void _setID(int id){
+    setState(() {
+      _id = id;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +130,15 @@ class MyHomepageState extends State<MyHomepage> {
               decoration: InputDecoration(labelText: 'explore...'),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextFormField(
+              onChanged: (val) {
+                _setID(int.parse(val));
+              },
+              decoration: InputDecoration(labelText: 'detete...'),
+            ),
+          ),
         ],
       ),
     );
@@ -135,42 +149,62 @@ class MyHomepageState extends State<MyHomepage> {
     return Container(
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: RaisedButton(
-              color: Colors.blue,
-              child: Text('insert'),
-              onPressed: () async {
-                _updateUser(u);
-                await helper.insertScore(u);
-              },
-            ),
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('insert'),
+                  onPressed: () async {
+                    _updateUser(u);
+                    await helper.insertScore(u);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('get'),
+                  onPressed: () async {
+                    list = await helper.getScore();
+                    for (int i = 0; i < list.length; i++){
+                      print(list[i].toMap());
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: RaisedButton(
-              color: Colors.blue,
-              child: Text('get'),
-              onPressed: () async {
-                list = await helper.getScore();
-                print(list[0].toMap());
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: RaisedButton(
-              color: Colors.blue,
-              child: Text('explore'),
-              onPressed: () async {
-                exploreList = await helper.getName(_exploreName);
-                print(exploreList);
-                print('id:${exploreList[0]['id']}');
-                print('username:${exploreList[0]['username']}');
-                print('score:${exploreList[0]['score']}');
-              },
-            ),
-          ),
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('explore'),
+                  onPressed: () async {
+                    exploreList = await helper.getName(_exploreName);
+                    print(exploreList);
+                    print('id:${exploreList[0]['id']}');
+                    print('username:${exploreList[0]['username']}');
+                    print('score:${exploreList[0]['score']}');
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('delete'),
+                  onPressed: () async {
+                    await helper.deleteScore(_id);
+                  },
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
