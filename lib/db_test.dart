@@ -153,7 +153,7 @@ class MyHomepageState extends State<MyHomepage> {
               child: Text('get'),
               onPressed: () async {
                 list = await helper.getScore();
-                print(list);
+                print(list[0].toMap());
               },
             ),
           ),

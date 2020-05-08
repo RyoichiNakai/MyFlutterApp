@@ -51,10 +51,12 @@ abstract class DatabaseProvider {
   }
 
   //中に入っているデータ全てを降順ソートして受け取る
-  Future<List<Map<String, dynamic>>> getScore() async{
+  Future<List<User>> getScore() async{
     final List<Map<String, dynamic>> maps
     = await db.query(tableName, orderBy: "score DESC");
-    return maps;
+    return List.generate(maps.length, (i) =>
+        User(maps[i]['id'], maps[i]['username'], maps[i]['score'])
+    );
   }
 
   //検索用
