@@ -65,6 +65,23 @@ abstract class DatabaseProvider {
     = await db.query(tableName, where:"username = ?", whereArgs:[name]);
     return maps;
   }
+
+  //データの削除
+  Future<void> deleteScore(int id) async{
+    await db.delete(tableName, where:"id = ?", whereArgs: [id]);
+  }
+
+  //データの更新
+  Future<void> updateScore(User user) async{
+    await db.update(
+      tableName,
+      user.toMap(),
+      where: "id = ?",
+      whereArgs: [user.id],
+      conflictAlgorithm: ConflictAlgorithm.fail
+    );
+  }
+
 }
 
 class DbProvider10 extends DatabaseProvider {
