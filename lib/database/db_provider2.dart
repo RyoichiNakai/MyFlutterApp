@@ -7,6 +7,7 @@ class DbProvider extends DatabaseProvider {
   String get databaseName => 'todolist.db';
 
   @override
+  //todo: テーブルどうやって作る？？
   createDBTable(Database database, int version, String tableName) => db.execute(
     """
           CREATE TABLE $tableName(
