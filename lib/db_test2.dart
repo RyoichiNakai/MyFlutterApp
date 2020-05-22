@@ -28,6 +28,7 @@ class MyHomepageState extends State<MyHomepage> {
   static String _title;
   static String _datetime;
   static String _tableName;
+  static String _exploreName;
   DbProvider _provider = new DbProvider();
   ToDoListModel _toDoListModel = new ToDoListModel(
       key: _key,
@@ -69,6 +70,13 @@ class MyHomepageState extends State<MyHomepage> {
       );
     });
   }
+
+  void _updateExploreName(String name){
+    setState(() {
+      _exploreName = name;
+    });
+  }
+
 
   @override
   void initState() {
@@ -146,6 +154,24 @@ class MyHomepageState extends State<MyHomepage> {
             padding: const EdgeInsets.all(10.0),
             child: Text('$_datetime'),
           ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextFormField(
+              onChanged: (val) {
+                _updateExploreName(val);
+              },
+              decoration: InputDecoration(labelText: 'explore...'),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TextFormField(
+              onChanged: (val) {
+                _updateKey(int.parse(val));
+              },
+              decoration: InputDecoration(labelText: 'detete...'),
+            ),
+          ),
         ],
       ),
     );
@@ -181,7 +207,14 @@ class MyHomepageState extends State<MyHomepage> {
                   child: Text('insert'),
                   onPressed: () async {
                     _updateModel(_toDoListModel);
-                    await _provider.insertList(_toDoListModel, _tableName);
+                    try{
+                      await _provider.insertList(_toDoListModel, _tableName);
+                      print("success insert!");
+                    }
+                    catch(e){
+                      print(e);
+                      print("cannnot insert ${_toDoListModel.toMap}");
+                    }
                   },
                 ),
               ),
@@ -194,9 +227,16 @@ class MyHomepageState extends State<MyHomepage> {
                   color: Colors.blue,
                   child: Text('get'),
                   onPressed: () async {
-                    var list = await _provider.getList(_tableName);
-                    for (int i = 0; i < list.length; i++){
-                      print(list[i]);
+                    try{
+                      var list = await _provider.getList(_tableName);
+                      for (int i = 0; i < list.length; i++){
+                        print(list[i]);
+                      }
+                      print("success getList!");
+                    }
+                    catch(e){
+                      print(e);
+                      print("cannnot getList");
                     }
                   },
                 ),
@@ -216,6 +256,18 @@ class MyHomepageState extends State<MyHomepage> {
                   color: Colors.blue,
                   child: Text('explore'),
                   onPressed: () async {
+                    try{
+                      var exploreList = await _provider.exploreTitle(_exploreName, _tableName);
+                      print(exploreList);
+                      print('id:${exploreList[0]['id']}');
+                      print('username:${exploreList[0]['username']}');
+                      print('score:${exploreList[0]['score']}');
+                    }
+                    catch(e){
+                      print(e);
+                      print("cannot explore");
+                    }
+
                   },
                 ),
               ),
@@ -227,7 +279,13 @@ class MyHomepageState extends State<MyHomepage> {
                   color: Colors.blue,
                   child: Text('delete'),
                   onPressed: () async {
-                    await _provider.deleteList(_key, _tableName);
+                    try{
+                      await _provider.deleteList(_key, _tableName);
+                    }
+                    catch(e){
+                     print(e);
+                     print("canonot delete");
+                    }
                   },
                 ),
               ),
@@ -236,34 +294,6 @@ class MyHomepageState extends State<MyHomepage> {
               ),
             ],
           ),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  color: Colors.blue,
-                  child: Text('explore'),
-                  onPressed: () async {
-                    exploreList = await helper.getName(_exploreName);
-                    print(exploreList);
-                    print('id:${exploreList[0]['id']}');
-                    print('username:${exploreList[0]['username']}');
-                    print('score:${exploreList[0]['score']}');
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: RaisedButton(
-                  color: Colors.blue,
-                  child: Text('delete'),
-                  onPressed: () async {
-                    await helper.deleteScore(_id);
-                  },
-                ),
-              ),
-            ],
-          )
         ],
       ),
     );
