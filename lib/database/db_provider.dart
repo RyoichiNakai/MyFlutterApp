@@ -13,18 +13,19 @@ import 'dart:io';
 abstract class DatabaseProvider {
   Database db;
   String get databaseName;
-  //String get tableName;
-  void createDBTable(Database database, int version ,String tableName);
+  void createDBTable(Database database, int version, String tableName);
 
   void init() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     final path = join(documentDirectory.path, databaseName);
     //deleteDatabase(path);
-    // openDatabaseメソッドを使用することでDBインスタンスを取得することができます。
-    db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database database, int version) => createDBTable,
-    );
+    // openDatabaseメソッドを使用することでDBインスタンスを取得することができる。
+    if(db == null){
+      db = await openDatabase(
+        path,
+        version: 1,
+        onCreate: (Database database, int version) => createDBTable,
+      );
+    }
   }
 }
