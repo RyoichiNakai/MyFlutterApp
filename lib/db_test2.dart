@@ -181,21 +181,51 @@ class MyHomepageState extends State<MyHomepage> {
     return Container(
       child: Column(
         children: <Widget>[
-          RaisedButton(
-            color: Colors.blue,
-            child: Text('create Table'),
-            onPressed: () async {
-              try{
-                //これでいいのか？？
-                _provider.createDBTable(_provider.db, 1, _tableName);
-                print("Create table!");
-              }
-              catch(e){
-                print(e);
-                print("Already Exist!");
-              }
-            },
+          Row(
+            children: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('create Table'),
+                  onPressed: () async {
+                    try{
+                      //これでいいのか？？
+                      _provider.createDBTable(_provider.db, 1, _tableName);
+                      print("Create table!");
+                    }
+                    catch(e){
+                      print(e);
+                      print("Already Exist!");
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
+              ),
+              Expanded(
+                child: RaisedButton(
+                  color: Colors.blue,
+                  child: Text('print Tables'),
+                  onPressed: () async {
+                    try{
+                      var list = await _provider.getTables();
+                      print(list);
+                    }catch(e){
+                      print(e);
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10)
+              ),
+            ],
           ),
+
           Row(
             children: <Widget>[
               Padding(

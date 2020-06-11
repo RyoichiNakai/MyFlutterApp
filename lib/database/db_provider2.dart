@@ -19,6 +19,13 @@ class DbProvider extends DatabaseProvider {
   );
 
   //挿入
+  Future getTables() async{
+    //todo:　ここエラーが出る
+    final list = await db.query("select * from sqlite_master where type='table'");
+    return list;
+  }
+
+  //挿入
   Future<void> insertList(ToDoListModel model, String tableName) async{
     await db.insert(
       tableName,
